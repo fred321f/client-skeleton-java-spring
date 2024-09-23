@@ -9,8 +9,24 @@
 	
 	<artifactId>arrowhead-application-skeleton-consumer</artifactId>
 	<name>Arrowhead Consumer Skeleton</name>
-	
-	<build>
+    <dependencies>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.28</version>
+			<scope>runtime</scope>
+		</dependency>
+
+        <dependency>
+            <groupId>ai.aitia</groupId>
+            <artifactId>arrowhead-core-common-essentials-java-spring</artifactId>
+            <version>4.6.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
 		<plugins>
 			<plugin>
     			<groupId>org.springframework.boot</groupId>

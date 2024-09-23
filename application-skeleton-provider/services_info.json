@@ -1,0 +1,93 @@
+{
+  "id": 361,
+  "serviceDefinition": {
+    "id": 56,
+    "serviceDefinition": "fingerprint-sensor",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "provider": {
+    "id": 38,
+    "systemName": "sysop",
+    "address": "localhost",
+    "port": 8888,
+    "authenticationInfo": "lenovo-laptop",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "serviceUri": "/fingerprint-sensor",
+  "secure": "NOT_SECURE",
+  "version": 1,
+  "interfaces": [
+    {
+      "id": 1,
+      "interfaceName": "HTTP-SECURE-JSON",
+      "createdAt": "2024-08-12T14:17:31Z",
+      "updatedAt": "2024-08-12T14:17:31Z"
+    }
+  ],
+  "createdAt": "2024-08-28T07:25:23Z",
+  "updatedAt": "2024-08-28T07:25:23Z"
+},
+{
+  "id": 362,
+  "serviceDefinition": {
+    "id": 57,
+    "serviceDefinition": "id-card-reader",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "provider": {
+    "id": 38,
+    "systemName": "sysop",
+    "address": "localhost",
+    "port": 8888,
+    "authenticationInfo": "lenovo-laptop",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "serviceUri": "/id-card-reader",
+  "secure": "NOT_SECURE",
+  "version": 1,
+  "interfaces": [
+    {
+      "id": 1,
+      "interfaceName": "HTTP-SECURE-JSON",
+      "createdAt": "2024-08-12T14:17:31Z",
+      "updatedAt": "2024-08-12T14:17:31Z"
+    }
+  ],
+  "createdAt": "2024-08-28T07:25:23Z",
+  "updatedAt": "2024-08-28T07:25:23Z"
+},
+{
+  "id": 363,
+  "serviceDefinition": {
+    "id": 58,
+    "serviceDefinition": "facial-recognition-camera",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "provider": {
+    "id": 38,
+    "systemName": "sysop",
+    "address": "localhost",
+    "port": 8888,
+    "authenticationInfo": "lenovo-laptop",
+    "createdAt": "2024-08-28T07:25:23Z",
+    "updatedAt": "2024-08-28T07:25:23Z"
+  },
+  "serviceUri": "/facial-recog-cam",
+  "secure": "NOT_SECURE",
+  "version": 1,
+  "interfaces": [
+    {
+      "id": 1,
+      "interfaceName": "HTTP-SECURE-JSON",
+      "createdAt": "2024-08-12T14:17:31Z",
+      "updatedAt": "2024-08-12T14:17:31Z"
+    }
+  ],
+  "createdAt": "2024-08-28T07:25:23Z",
+  "updatedAt": "2024-08-28T07:25:23Z"
+}

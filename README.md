@@ -1,111 +1,198 @@
-# Arrowhead Application Skeletons (Java Spring-Boot)
-##### The project provides application skeletons for the Arrowhead Framework
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
-### How to use application skeletons?
+- [Prerequisities](#prerequisities)
+- [Hidtil implementering](#hidtil-implementering)
+    * [Provider](#provider)
+    * [Consumer](#consumer)
+        + [Reproduktion af problemet](#reproduktion-af-problemet)
+        + [Allerede forsøgte løsninger](#allerede-forsøgte-løsninger)
 
-Fork this repo and extend the skeletons with your own application code. ([check the best practice recommendations](https://github.com/arrowhead-f/client-skeleton-java-spring/blob/master/README.md#best-practices-to-start-with-the-skeletons))
+<!-- TOC end -->
 
-### Requirements
+<!-- TOC --><a name="prerequisities"></a>
+# Prerequisities
+Download & konfigurer en Arrowhead Local Cloud fra [det officielle github repository](https://github.com/eclipse-arrowhead/core-java-spring). Vær opmærksom på, at der er specificeret yderligere prerequisities i README for omtalte repository.
+Følg YouTube-videoen AITIA har lavet, som introducerer local cloud systemet. Videoen kan findes [her](https://www.youtube.com/watch?v=52Up5iDJKx4).
+Når denne video er gennemført og du har en grundlæggende forståelde for, hvordan systemet virker, anbefales det at hente [Arrowhead's Management Tool](https://aitia.ai/downloads/ah-mgmt-tool/), som er en grafisk brugerflade til overblik over services og systems i din local cloud.
+<!-- TOC --><a name="hidtil-implementering"></a>
+# Hidtil implementering
+<!-- TOC --><a name="provider"></a>
+## Provider
+Provider-koden er indrettet således, at den ved kørsel først og fremmest vil oprette de tre provider-services som er angivet i  tjekke om databasen specificeret i application.properties er seeded med nogle testdata:
+```BASH
++----+----------+------------------+--------------+-------------------+
+| id | name     | fingerprint_hash | id_card_hash | facial_recog_hash |
++----+----------+------------------+--------------+-------------------+
+|  2 | John Doe |           123456 |       654321 |            987654 |
++----+----------+------------------+--------------+-------------------+
+```
+Tilmed oprettes der 3 service-definitions som vist underneden 
 
-The project has the following dependencies:
-* JRE/JDK 11 [Download from here](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
-* Maven 3.5+ [Download from here](http://maven.apache.org/download.cgi) | [Install guide](https://www.baeldung.com/install-maven-on-windows-linux-mac)
+![[service-definitions]](./img/service-definitions.png)
 
-### Project structure
+Derudover er der oprettet et provider-system kaldet "lenovo-provider", hvilket er specificeret i providerens tilhørende application.properties.
+Det er utroligt vigtigt, at navnet på provider-systemet er identisk med navnet på dit SSL licens. En guide til at lave sit eget licens kan findes i [denne undermappe](https://github.com/eclipse-arrowhead/core-java-spring/tree/master/documentation/certificates) fra det officielle repository.
+Den nuværende konfiguration virker udmærket, så til at starte med burde denne konfiguration være tilstrækkelig.
 
-This is a multi-module maven project relying on the [parent `pom.xml`](https://github.com/arrowhead-f/client-skeleton-java-spring/blob/master/pom.xml) which lists all the modules and common dependencies.
+<!-- TOC --><a name="consumer"></a>
+## Consumer
+Problemet med koden opstår i consumeren. Koden er indrettet til, at der laves en orchestration request til Arrowhead's Orchestration Service, som returnerer en liste af services, der matcher de angivne kriterier.
+Problemet er bare, at der uanset hvad returneres et tomt array, så orchestration response altså er tomt:
+```JSON
+2024-09-05 11:25:10.422  INFO 9556 --- [  restartedMain] e.a.a.s.c.ConsumerMain                   : Service query form constructed:
+{
+  "serviceDefinitionRequirement" : "id-card-reader",
+  "interfaceRequirements" : [ "HTTP-SECURE-JSON" ],
+  "securityRequirements" : null,
+  "metadataRequirements" : null,
+  "versionRequirement" : null,
+  "minVersionRequirement" : null,
+  "maxVersionRequirement" : null,
+  "providerAddressTypeRequirements" : null,
+  "pingProviders" : false
+}
+2024-09-05 11:25:10.436  INFO 9556 --- [  restartedMain] e.a.a.s.c.ConsumerMain                   : Orchestration request constructed:
+{
+  "requesterSystem" : {
+    "systemName" : "lenovo-consumer",
+    "address" : "localhost",
+    "port" : 8888,
+    "authenticationInfo" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqWdqKIUsgO1ow3VWCMUGa3hd/kmC8iDvmE3JuVMdgrNt4AOTye5KNYva3vQ0iQ91gguQ+OfjOSkUETzx/jwfMqQzPBzircqZE4+kB1VS+TvOkZCxhcfP5rW/cGt5KpyhCmjwpGZm+0tmYdZySF0VfAuC2SF8K9NPSOtxM8fivOwMyW5UDrRUpJRxwQV70cxWdS2qIS84hI+hUSvHxo+FHMYeVAjLSz4N0iyPjrPQLhCFDl/4oMtsZ3YZ60iwXT8EKtUFoulHasaI6Mmz95h2nM0TuHsCx9x2/9wUjn504kVzjRkK7Vw18LR2YBrGHSLRWsTzEcMUlRIq00Is2gD8+QIDAQAB",
+    "metadata" : null
+  },
+  "requesterCloud" : null,
+  "requestedService" : {
+    "serviceDefinitionRequirement" : "id-card-reader",
+    "interfaceRequirements" : [ "HTTP-SECURE-JSON" ],
+    "securityRequirements" : null,
+    "metadataRequirements" : null,
+    "versionRequirement" : null,
+    "minVersionRequirement" : null,
+    "maxVersionRequirement" : null,
+    "providerAddressTypeRequirements" : null,
+    "pingProviders" : false
+  },
+  "orchestrationFlags" : {
+    "onlyPreferred" : false,
+    "overrideStore" : true,
+    "onlyIPAddressResponse" : false,
+    "externalServiceRequest" : false,
+    "onlyIPv4AddressResponse" : false,
+    "onlyIPv6AddressResponse" : false,
+    "enableInterCloud" : false,
+    "enableQoS" : false,
+    "matchmaking" : false,
+    "metadataSearch" : false,
+    "triggerInterCloud" : false,
+    "pingProviders" : false
+  },
+  "preferredProviders" : [ ],
+  "commands" : { },
+  "qosRequirements" : { }
+}
+2024-09-05 11:25:10.441 DEBUG 9556 --- [  restartedMain] a.a.a.a.l.ArrowheadService               : 'ORCHESTRATION_SERVICE' core service is not contained by Arrowhead Context.
+2024-09-05 11:25:10.441 DEBUG 9556 --- [  restartedMain] a.a.a.a.l.ArrowheadService               : Orchestration couldn't be proceeded due to the following reason: ORCHESTRATION_SERVICE not known by Arrowhead Context
+2024-09-05 11:25:10.441  INFO 9556 --- [  restartedMain] e.a.a.s.c.ConsumerMain                   : Orchestration response received:
+null
+2024-09-05 11:25:10.441 ERROR 9556 --- [  restartedMain] e.a.a.s.c.ConsumerMain                   : Orchestration response is null. Throwing InvalidParameterException...
+2024-09-05 11:25:10.442 ERROR 9556 --- [  restartedMain] e.a.a.s.c.ConsumerMain                   : InvalidParameterException caught: Orchestration response is empty
+```
 
-##### Modules:
+<!-- TOC --><a name="reproduktion-af-problemet"></a>
+### Reproduktion af problemet
+**Fra SwaggerUI:**
+1. Gå til https://localhost:8443/swagger-ui.html, og henvis da til endpoint'et "/serviceregistry/mgmt/systems" under "Client"-menuen.
+2. Indtast følgende JSON i request body:
+```JSON
+{
+  "address": "localhost",
+  "authenticationInfo": "consumer-auth",
+  "port": 8888,
+  "systemName": "lenovo-consumer-system"
+}
+```
+3. Dit system er nu registreret under [systemName] i din local cloud:
 
-* **application-skeleton-consumer**: application skeleton module with the purpose of initiating an orchestration request and consume the service from the chosen provider. This consumer project also contains a simple example of how to orchestrate and consume the service afterward.
+   ![service-registry.png](img/service-registry.png)
+4. Det er nu tid til at lave en intracloud authorization rule. Gå til endpoint'et "/authorization/mgmt/intracloud" under "Client"-menuen, på https://localhost:8445/swagger-ui.html.
+5. Indtast følgende JSON i request body (hvor der udfyldes med respektive systemId'er mv.) f.eks.:
+```JSON
+{
+  "consumerId": 60, // ID of your newly registered system
+  "interfaceIds": [ // ID's of the preferred interface e.g. HTTP-SECURE-JSON or HTTP-INSECURE-JSON
+    0
+  ],
+  "providerIds": [ // ID of the provider system(s)
+    58
+  ],
+  "serviceDefinitionIds": [ // ID of the service definition(s) e.g. id-card-reader
+    84, 85, 86
+  ]
+}
+```
+6. Nu er det tid til at lave en orchestration request. Gå til endpoint'et "/orchestration/mgmt/orchestration" under "Client"-menuen, på https://localhost:8445/swagger-ui.html.
+7. Der indtastes følgende oplysninger i JSON request body:
+```JSON
+{
+  "requesterSystem": {
+    "systemName": "lenovo-consumer",
+    "address": "localhost",
+    "port": 8888,
+    "authenticationInfo": "consumer-auth",
+    "metadata": null
+  },
+  "requesterCloud": null,
+  "requestedService": {
+    "serviceDefinitionRequirement": "id-card-reader",
+    "interfaceRequirements": [
+      "HTTP-SECURE-JSON"
+    ],
+    "securityRequirements": null,
+    "metadataRequirements": null,
+    "versionRequirement": null,
+    "minVersionRequirement": null,
+    "maxVersionRequirement": null,
+    "providerAddressTypeRequirements": null,
+    "pingProviders": false
+  },
+  "orchestrationFlags": {
+    "onlyPreferred": false,
+    "overrideStore": true,
+    "onlyIPAddressResponse": false,
+    "externalServiceRequest": false,
+    "onlyIPv4AddressResponse": false,
+    "onlyIPv6AddressResponse": false,
+    "enableInterCloud": false,
+    "enableQoS": false,
+    "matchmaking": false,
+    "metadataSearch": false,
+    "triggerInterCloud": false,
+    "pingProviders": false
+  },
+  "preferredProviders": [],
+  "commands": {},
+  "qosRequirements": {}
+}
+```
+**_Husk altid formaliteterne hvad angår navngivning af systemer og hvilket licens der er brugt..._**
 
-* **application-skeleton-provider**: application skeleton module with the purpose of registering a specific service into the Service Registry and running a web server where the service is available.
+Hvis alle disse trin er fulgt (og requests er udfyldt efter fomaliteter m.v., vil orchestration response returnere et tomt array.
 
-* **application-skeleton-subscriber**: application skeleton module with the purpose of registering subscriptions into the Event Handler and running a web server where it waits for notifications.
+**Fra IDE:**
+1. Start Arrowhead Local Cloud
+2. Kør Provider-programmet
+3. Kør Consumer-programmet
 
-* **application-skeleton-publisher**: application publisher module with the purpose of publishing events into the Event Handler.
+**Bemærk;** Når der reproduceres i Orchestration Service's SwaggerUI, er der to mulige udfald... Enten returneres et tomt array, eller også returneres en "401 Unauthorized".
+Hvis dette forekommer, kontroller da at "systemName" i request body stemmer overens med den SSL licens, du vælger når du indlæser siden. Eksempel på, hvordan det ser ud når du bliver promptet til at vælge licens:
 
-Skeletons are built on the [`Arrowhead Application Library`](https://github.com/arrowhead-f/application-library-java-spring) which is also imported to this project as a Maven dependency. The application library provides the `ArrowheadService.class` which is a singleton spring managed bean and designed with the purpose of interacting with Arrowhead Framework. Use its methods by [autowiring](https://www.baeldung.com/spring-autowire) into your spring managed custom classes or use `ArrowheadBeans.getArrowheadService()` if your custom class is not spring managed. *(**Look for the java docs** attached for each method within this class.)*
+![licens-prompt.png](img/licens-prompt.png)
 
-Each application skeleton has a default 'ApplicationInitListener' and a default 'SecurityConfig' what you can change or extend. The essential configuration has to be managed by customizing the `application.properties` file, located in `src/main/resources` folder.
+<!-- TOC --><a name="allerede-forsøgte-løsninger"></a>
+### Allerede forsøgte løsninger
+1. Bekræftelse af at provider og consumer er på samme netværk
+2. Bekræftelse af at provider's oplysninger stemmer overens med de, som bliver requested af orchestration
+3. Parametre som fx serviceDefinitionRequirement, interfaceRequirements, securityRequirements, metadataRequirements, versionRequirement, minVersionRequirement, maxVersionRequirement, providerAddressTypeRequirements, pingProviders er blevet testet med forskellige værdier
 
-### Best practices to start with the skeletons
+Uanset hvad returnerer det altid et null-response.
 
-##### (1st) application.properties
-Location: `src/main/resources`
-* Decide the required security level and set the `server.ssl.enabled` and `token.security.filter.enabled` properties accordingly.
-* If `token.security.filter.enabled` is true, `server.ssl.enabled` also has to be true !!!
-* [Create](https://github.com/arrowhead-f/core-java-spring#certificates) your own client certificate (or for demo purpose use the provided one) and update the further `server.ssl...` properties accordingly. *(**Note** that `server.ssl.key-store-password` and `server.ssl.key-password` must be the same.)*
-* Change the `application_system_name` property to your system name. *(**Note** that it should be in line with your certificate common name e.g.: when your certificate common name is `my-awesome-client.my-cloud.my-company.arrowhed.eu`, then your system name is  `my-awesome-client`)*
-* Adjust the Service Registry Core System location by the `sr_address` and `sr_port` properties.
-* In case of a provider you have to set its web-server parameters by the `server.address` and `server.port` properties.
-* In case of a consumer decide whether it should act as a web-server or not. If yes, then set the `spring.main.web-application-type` to 'servlet' and set further server parameters like in the provider case. If not, just leave these properties unchanged.
-* In case of a subscriber you have to set its web-server parameters by the `server.address` and `server.port` properties.
-* In case of a subscriber you should set event type - notification URI pair properties as `event.eventTypeURIMap.{YOUR_EVENT_TYPE}={notificationuri for YOUR_EVENT_TYPE}`.
-* In case of a publisher you have to set its web-server parameters by the `server.address` and `server.port` properties.
-* In case of a publisher decide whether it should act as a web-server or not. If not, then set the `spring.main.web-application-type` to 'none'. 
-
-##### (2nd) package structure
-All the provided skeleton classes are located in the child packages of the `eu.arrowhead` base package.
-* You can create your own classes  under this base package or
-* You can create your own packages like `com.my_company.my_awesome_project` to organize the skeleton and the application code separated. In the latter case if you wish to use Spring Beans at your custom packages, then you have to let the Spring Framework to known about your base package(s). This can be managed by adding the base package name(s) as a string value(s) in the `@ComponentScan` annotation of the application's `Main.class` *(**Look for the 'TODO' mark** within the main class)*.
-
-##### (3rd) security configuration
-The skeletons provide a built-in arrowhed framework compatible security configuration located in `eu.arrowhead.application.skeleton.consumer|provider.security` package.
-* The `ConsumerSecurityConfig.class`, the `ProviderSecurityConfig.class`, the `SubscriberSecurityConfig.class` and the `PublisherSecurityConfig.class` extends the `DefaultSecurityConfig.class` which is imported by the application-library dependency and responsible for setting the `server.ssl.enabled` property declared in the `application.properties`. *(**Note:** The `ConsumerSecurityConfig.class` is became effective only when your consumer is a web-server.)*
-* The `ConsumerAccessControlFilter.class` the `ProviderSecurityConfig.class`, the `SubscriberSecurityConfig.class` and the `PublisherSecurityConfig.class` extends the `AccessControlFilter.class` which is imported by the application-library dependency and responsible for setting the security level based on the `application.properties`.
-  -  `ConsumerAccessControlFilter.class` is effective only when your consumer is a web-server and `server.ssl.enabled` property is set to true. This filter is responsible for validating whether the received HTTPS request is coming from one of the local cloud's clients based on its certificate. *(**Look for the 'TODO' mark** within this class if you want to implement additional access rules.)*
-  -  `ProviderAccessControlFilter.class` is doing the same as described in the consumer case, but is effective only when `server.ssl.enabled` property is set to true and `token.security.filter.enabled` property is set to false. When `token.security.filter.enabled` property is set to true, then `ProviderTokenSecurityFilter.class` is effective which is validating whether a token is received within the HTTPS request and whether it is a valid one ore not. *(**Note** that the token is created by the Authorization Core System during the orchestration process and the consumer have to put it into its HTTPS request as a query parameter.)*
-  -  `PublisherAccessControlFilter.class` is doing the same as described in the provider case, but when `token.security.filter.enabled` property is set to true, then `PublisherTokenSecurityFilter.class` is effective and is doing the same as described in the provider case.
-  -  `SubscriberAccessControlFilter.class` is doing the same as described in the provider case, but when `token.security.filter.enabled` property is set to true, then `SubscriberTokenSecurityFilter.class` is effective.
-* The `SubscriberTokenSecurityFilter.class` is only checking the token if the requested target URI is NOT a notification URI. Notfication URIs are specified in the application.properties file.
-* The `SubscriberNotificationAccessControlFilter.class` is checking the requested target URI and if it is registered in the application.properties as notification URI then validating whether the requester is an allowed Core System. If the requester is not allowed, it throws an AuthExeption with `" is unauthorized to access "` text in the message body. *(**Note:** By default only the `EVENT HANDLER CORE SYSTEM` is allowed.)* 
-
-##### (4th) start-up & shutdown configuration
-The skeletons provide a built-in application start-up and shutdown configuration located in `eu.arrowhead.application.skeleton.consumer|provider` package.
-The `ConsumerApplicationInitListener.class`, the `ProviderApplicationInitListener.class`, `PublisherApplicationInitListener.class` and the `SubscriberApplicationInitListener.class` contains the `customInit()` method which is executed automatically right after the application start-up and also the `customDestroy()` method which is executed automatically right after triggering the application shutdown, but still before the final stop. *(**Look for the 'TODO' marks** within these classes if you want to implement additional logic.)*
-
-###### Already implemented Consumer start-up logic:
-* Checking the Service Registry Core System reachability. *(Sends an 'echo' request to the server.)*
-* Checking the Orchestrator Core System reachability. *(Sends an 'echo' request to the server.)*
-* Querying and storing the public service URIs of Orchestrator Core System. *(Sends 'query' requests to the Service Registry.)*
-
-###### Already implemented Provider start-up logic:
-* Checking the Service Registry Core System reachability. *(Sends an 'echo' request to the server.)*
-* Checking the Authorization Core System reachability if 'TokenSecurityFilter' enabled. *(Sends an 'echo' request to the server.)*
-* Querying and storing the 'public-key' service URI of Authorization Core System if token security filter is enabled. *(Sends a 'query' request to the Service Registry.)*
-* Turning on the token security filter if it is enabled.
-
-###### Recommended Provider start-up logics:
-* Registering the provided service into the Service Registry Core System. *(**Hint:** Use the `forceRegisterServiceToServiceRegistry()` method from `ArrowheadService.class`. It removes your current service registry entry from the database and registers again, so it ensures that if your service interfaces or the metadata have been changed, then the freshest condition will be published.)*
-
-###### Recommended Provider shutdown logic:
-* Unregistering the service from Service Registry Core System. *(**Hint:** Use the `unregisterServiceFromServiceRegistry()` method from `ArrowheadService.class`.)*
-
-###### Already implemented Publisher start-up logics:
-* Checking the Service Registry Core System reachability. *(Sends an 'echo' request to the server.)*
-* Checking the Authorization Core System reachability if 'TokenSecurityFilter' enabled. *(Sends an 'echo' request to the server.)*
-* Checking the Event Handler Core System reachability. *(Sends an 'echo' request to the server.)*
-* Querying and storing the 'public-key' service URI of Authorization Core System if token security filter is enabled. *(Sends a 'query' request to the Service Registry.)*
-* Turning on the token security filter if it is enabled.
-* Publishing an event with `START_INIT` event type and `"InitStarted"` payload when the start-up is successful.
-
-###### Already implemented Subscriber start-up logics:
-* Checking the Service Registry Core System reachability. *(Sends an 'echo' request to the server.)*
-* Checking the Authorization Core System reachability if 'TokenSecurityFilter' enabled. *(Sends an 'echo' request to the server.)*
-* Checking the Event Handler Core System reachability. *(Sends an 'echo' request to the server.)*
-* Querying and storing the 'public-key' service URI of Authorization Core System if token security filter is enabled. *(Sends a 'query' request to the Service Registry.)*
-* Setting eventTypeMap field of token security filter.
-* Turning on the token security filter if it is enabled.
-* Turning on the notification filter.
-* Subscribing to the event types defined in apllication.properties.
-
-###### Recommended Subscriber start-up order
-* Register Subscriber system in Service Registry (through swagger)
-* Authorize Subscriber to Publisher in Authorization (through swagger)
-* Start Subscriber (subscribe to events)
-
-###### Already implemented Subscriber shutdown logics:
-* Unsubscribing from the event types defined in apllication.properties.
-
-##### Check [`sos-examples-spring`](https://github.com/arrowhead-f/sos-examples-spring) repository for full demo application implementations.

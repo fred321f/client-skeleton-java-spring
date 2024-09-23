@@ -15,6 +15,21 @@
     "description": "A description for 'sr_port'"
   },
   {
+    "name": "orch_address",
+    "type": "java.lang.String",
+    "description": "A description for 'orch_address'"
+  },
+  {
+    "name": "orch_port",
+    "type": "java.lang.String",
+    "description": "A description for 'orch_port'"
+  },
+  {
+    "name": "auth_address",
+    "type": "java.lang.String",
+    "description": "A description for 'auth_address'"
+  },
+  {
     "name": "token.security.filter.enabled",
     "type": "java.lang.Boolean",
     "description": "A description for 'token.security.filter.enabled'"

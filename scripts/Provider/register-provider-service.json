@@ -1,0 +1,20 @@
+{
+  "endOfValidity": "2024-12-31T23:59:59Z",
+  "interfaces": [
+    "HTTP-SECURE-JSON"
+  ],
+  "metadata": {
+    "description": "A simple service provided by lenovo_provider"
+  },
+  "providerSystem": {
+    "address": "127.0.0.1",
+    "authenticationInfo": "",
+    "metadata": {},
+    "port": 8443,
+    "systemName": "sysop"
+  },
+  "secure": "NOT_SECURE",
+  "serviceDefinition": "lenovoservicetest",
+  "serviceUri": "/simple-service",
+  "version": 1
+}

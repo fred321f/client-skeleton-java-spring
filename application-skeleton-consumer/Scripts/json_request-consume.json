@@ -1,0 +1,28 @@
+{
+  "preferredProviders": [
+    {
+      "providerSystem": {
+        "address": "localhost",
+        "authenticationInfo": "lenovo-laptop",
+        "port": 8888,
+        "systemName": "sysop"
+      }
+    }
+  ],
+  "requestedService": {
+    "interfaceRequirenments": [
+      "HTTP-SECURE-JSON"
+    ],
+    "pingProviders": true,
+    "securityRequirements": [
+      "NOT_SECURE"
+    ],
+    "serviceDefinitionRequirement": "string"
+  },
+  "requesterSystem": {
+    "address": "localhost",
+    "authenticationInfo": "lenovo-laptop",
+    "port": 8888,
+    "systemName": "consumerskeleton"
+  }
+}

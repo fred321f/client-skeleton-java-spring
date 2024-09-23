@@ -1,0 +1,19 @@
+[
+  {
+    "cloud": {
+      "name": "testcloud2.aitia",
+      "operator": "aitia",
+      "secure": true
+    },
+    "consumerSystemId": 51,
+    "priority": 1,
+    "providerSystem": {
+      "address": "localhost",
+      "authenticationInfo": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqWdqKIUsgO1ow3VWCMUGa3hd/kmC8iDvmE3JuVMdgrNt4AOTye5KNYva3vQ0iQ91gguQ+OfjOSkUETzx/jwfMqQzPBzircqZE4+kB1VS+TvOkZCxhcfP5rW/cGt5KpyhCmjwpGZm+0tmYdZySF0VfAuC2SF8K9NPSOtxM8fivOwMyW5UDrRUpJRxwQV70cxWdS2qIS84hI+hUSvHxo+FHMYeVAjLSz4N0iyPjrPQLhCFDl/4oMtsZ3YZ60iwXT8EKtUFoulHasaI6Mmz95h2nM0TuHsCx9x2/9wUjn504kVzjRkK7Vw18LR2YBrGHSLRWsTzEcMUlRIq00Is2gD8+QIDAQAB",
+      "port": 8888,
+      "systemName": "lenovo-provider"
+    },
+    "serviceDefinitionName": "id-card-reader",
+    "serviceInterfaceName": "HTTP-SECURE-JSON"
+  }
+]
